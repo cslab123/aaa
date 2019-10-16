@@ -1,0 +1,82 @@
+
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include<cstring>
+#include <bits/stdc++.h>
+using namespace std;
+struct frame{
+    char s[100];
+    int seqno;
+};
+void display(frame f[],int p,int n){
+    cout<<"Sequence_no\tData\n";
+    for(int i=0;i<p;i++){
+        cout<<"    "<<f[i].seqno<<"\t\t ";
+        for(int j=0;j<n;j++)
+        cout<<f[i].s[j];
+        cout<<endl;
+    }
+   
+}
+void shuffle_frames(frame a[],int p,int n){
+    int c;
+    char temp[100];
+    srand(time(0));
+    for(int i=0;i<p;i++){
+        c=rand()%p;
+        if(c!=i && (strlen(a[c].s)==strlen(a[i].s))){
+            swap(a[c].seqno,a[i].seqno);
+            strcpy(temp,a[i].s);
+            strcpy(a[i].s,a[c].s);
+            strcpy(a[c].s,temp);
+        }
+    }
+}
+void sort(frame a[],int p,int n){
+    char temp[100];
+    for(int i=0;i<p-1;i++){
+        for(int j=0;j<p-i-1;j++){
+            if(a[j].seqno>a[j+1].seqno){
+                swap(a[j].seqno,a[j+1].seqno);
+                strcpy(temp,a[j].s);
+                strcpy(a[j].s,a[j+1].s);
+                strcpy(a[j+1].s,temp);
+            }
+        }
+    }
+}
+int main(){
+    int n;
+    string message;
+    cout<<"Enter the message\n";
+    getline(cin,message);
+    cout<<"Enter the frame size\n";
+    cin>>n;
+    int p;
+    if(message.length()%n==0)
+    p=message.length()/n;
+    else
+    p=message.length()/n+1;
+    int k=0,j=0;
+    frame f[p];
+    for(int i=0;i<p;i++){
+        for(j=0;j<n;j++){
+            f[i].s[j]=message[k];
+            k++;
+        }
+        f[i].s[j]='\0';
+        f[i].seqno=i+1;
+    }
+    cout<<"Before shuffling:\n";
+    display(f,p,n);
+    shuffle_frames(f,p,n);
+    cout<<"After shuffling:\n";
+    cout<<"Sequence_no\tData\n";
+    display(f,p,n);
+    sort(f,p,n);
+    cout<<"Frames after sorting\n";
+    display(f,p,n);
+    return 0;
+}
+
